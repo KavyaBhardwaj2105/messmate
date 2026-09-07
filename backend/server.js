@@ -49,8 +49,8 @@ app.use(
 );
 
 // Body parsers with sane size limits to prevent oversized-payload abuse
-app.use(express.json({ limit: '12mb' }));
-app.use(express.urlencoded({ extended: true, limit: '12mb' }));
+app.use(express.json({ limit: '24mb' }));
+app.use(express.urlencoded({ extended: true, limit: '24mb' }));
 app.use('/uploads', express.static(require('path').join(__dirname, 'uploads'), { maxAge: '7d', immutable: true }));
 
 // Strip any keys starting with "$" or containing "." from user input to

@@ -1,13 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import {
-  MapPin,
-  Star,
-  Utensils,
-  MessageSquare,
-  ArrowRight,
-} from 'lucide-react';
+import { MapPin, Star, Utensils, MessageSquare, ArrowRight, IndianRupee } from 'lucide-react';
 
 const HostelCard = ({ hostel }) => {
   const {
@@ -22,113 +16,98 @@ const HostelCard = ({ hostel }) => {
     images = [],
   } = hostel;
 
-  const rating = Number(avgRating || 0).toFixed(1);
-  const price =
-    monthlyMessCost !== undefined &&
-    monthlyMessCost !== null &&
-    monthlyMessCost !== ''
-      ? `₹${Number(monthlyMessCost).toLocaleString('en-IN')}/month`
-      : 'Price not listed';
-
-  const foodLabel =
-    foodAvailability === true
-      ? 'Food Available'
-      : foodAvailability === false
-        ? 'Food Not Listed'
-        : 'Food Info Available';
-
   return (
     <motion.div
       whileHover={{ y: -5, scale: 1.01 }}
       transition={{ duration: 0.2 }}
-      className="group relative flex flex-col justify-between bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-soft hover:shadow-lifted hover:border-brand-200 dark:hover:border-brand-500/50 transition-all duration-300 overflow-hidden"
+      className="group relative flex flex-col justify-between bg-white rounded-2xl border border-slate-200/80 shadow-soft hover:shadow-lifted hover:border-brand-200 transition-all duration-300 overflow-hidden"
     >
-      {images[0]?.url ? (
-        <Link
-          to={'/hostels/' + _id}
-          className="block h-44 overflow-hidden bg-slate-100 dark:bg-slate-800"
-        >
-          <img
-            src={images[0].url}
-            alt={images[0].alt || name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
-          />
-        </Link>
-      ) : (
-        <div className="h-24 bg-gradient-to-br from-brand-50 to-indigo-50 dark:from-slate-800 dark:to-slate-700" />
-      )}
+      {images[0]?.url ? <Link to={`/hostels/${_id}`} className="block h-44 overflow-hidden bg-slate-100"><img src={images[0].url} alt={images[0].alt || name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"/></Link> : <div className="h-24 bg-gradient-to-br from-brand-50 to-indigo-50" />}
 
-      <div className="p-5 flex flex-col flex-1">
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div className="min-w-0">
-            <Link
-              to={'/hostels/' + _id}
-              className="block text-lg font-extrabold text-slate-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors truncate"
-            >
-              {name}
-            </Link>
+      {/* Top Card Section */}
+      <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between gap-4">
+        {/* Header row: City & Rating Badge */}
+        <div className="flex items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">
+            <MapPin className="w-3.5 h-3.5 text-brand-500" />
+            {city}
+          </span>
 
-            <div className="flex items-center gap-1.5 mt-1 text-sm text-slate-500 dark:text-slate-400">
-              <MapPin className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate">{city || 'Location not listed'}</span>
-            </div>
-          </div>
-
-          <div className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 text-xs font-extrabold">
+          <div
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold shadow-sm ${
+              avgRating >= 4.0
+                ? 'bg-amber-500 text-white'
+                : avgRating >= 3.0
+                ? 'bg-amber-400 text-slate-900'
+                : avgRating > 0
+                ? 'bg-amber-100 text-amber-900 border border-amber-200'
+                : 'bg-slate-100 text-slate-500'
+            }`}
+          >
             <Star className="w-3.5 h-3.5 fill-current" />
-            {rating}
+            <span>{avgRating > 0 ? Number(avgRating).toFixed(1) : 'New'}</span>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold">
-            <Utensils className="w-3.5 h-3.5" />
-            {foodLabel}
-          </span>
+        {/* Hostel Title & Details */}
+        <div>
+          <Link to={`/hostels/${_id}`} className="focus:outline-none">
+            <h3 className="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition-colors line-clamp-1">
+              {name}
+            </h3>
+          </Link>
+          {foodAvailability && (
+            <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-1.5">
+              <Utensils className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+              <span className="truncate">{foodAvailability}</span>
+            </p>
+          )}
+        </div>
 
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 text-xs font-bold">
+        {/* Quick Category highlights if available */}
+        {categoryRatings && categoryRatings.taste > 0 && (
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
+            <span className="text-slate-400">Taste</span>
+            <span className="font-semibold text-slate-700 flex items-center gap-1">
+              <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+              {Number(categoryRatings.taste).toFixed(1)}
+            </span>
+
+            <span className="text-slate-300">•</span>
+
+            <span className="text-slate-400">Hygiene</span>
+            <span className="font-semibold text-slate-700 flex items-center gap-1">
+              <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+              {Number(categoryRatings.hygiene).toFixed(1)}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Card Footer: Mess Cost & CTA */}
+      <div className="px-5 sm:px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between gap-3">
+        <div>
+          <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+            Monthly Mess
+          </p>
+          <p className="text-base font-extrabold text-slate-900 flex items-center">
+            ₹{monthlyMessCost?.toLocaleString('en-IN')}
+            <span className="text-xs font-normal text-slate-500 ml-0.5">/mo</span>
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-slate-400 flex items-center gap-1">
             <MessageSquare className="w-3.5 h-3.5" />
             {totalReviews} {totalReviews === 1 ? 'review' : 'reviews'}
           </span>
-        </div>
-
-        {categoryRatings && Object.keys(categoryRatings).length > 0 && (
-          <div className="mb-4 grid grid-cols-2 gap-2">
-            {Object.entries(categoryRatings)
-              .slice(0, 4)
-              .map(([category, value]) => (
-                <div
-                  key={category}
-                  className="flex items-center justify-between gap-2 text-xs"
-                >
-                  <span className="text-slate-500 dark:text-slate-400 truncate capitalize">
-                    {category}
-                  </span>
-                  <span className="font-bold text-slate-700 dark:text-slate-200">
-                    {Number(value || 0).toFixed(1)}
-                  </span>
-                </div>
-              ))}
-          </div>
-        )}
-
-        <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3">
-          <div>
-            <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">
-              Monthly mess cost
-            </p>
-            <p className="text-sm font-extrabold text-slate-900 dark:text-white">
-              {price}
-            </p>
-          </div>
 
           <Link
-            to={'/hostels/' + _id}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition-all shadow-sm"
+            to={`/hostels/${_id}`}
+            className="p-2 rounded-xl bg-white group-hover:bg-brand-600 text-slate-700 group-hover:text-white border border-slate-200 group-hover:border-brand-600 shadow-sm transition-all"
+            aria-label={`View reviews for ${name}`}
           >
-            View
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

@@ -162,6 +162,7 @@ const createOrUpdateReview = asyncHandler(async (req, res) => {
     categories: categories || { taste: Number(rating), hygiene: Number(rating) },
     tags: Array.isArray(tags) ? tags : [],
     comment: comment.trim(),
+    images: Array.isArray(images) ? images.slice(0, 6) : [],
   });
 
   return res.status(201).json({

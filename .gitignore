@@ -37,7 +37,3 @@ logs/
 # Local development media uploads
 backend/uploads/*
 !backend/uploads/.gitkeep
-# Environment secrets
-.env
-.env.*
-!.env.example
