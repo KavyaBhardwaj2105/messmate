@@ -1,6 +1,8 @@
 # MessMate 🍽️
 
-> **"Know your mess before you move in."**
+> **"Know your mess before you move in."*
+> Live Demo!!!
+> *https://messmatekavya.netlify.app/
 
 A full-stack Hostel & PG Food Review web application for college students across India. Discover authentic mess ratings, taste & hygiene scores, monthly costs, and real student feedback before paying upfront accommodation deposits.
 
